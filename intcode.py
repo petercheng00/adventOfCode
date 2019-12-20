@@ -8,9 +8,9 @@ ints[-1] = ints[-1].strip()
 ints = [int(i) for i in ints]
 
 class Computer:
-    def __init__(self, program, inputs):
+    def __init__(self, program, inputs=[]):
         self.program = program.copy()
-        self.inputs = inputs
+        self.inputs = inputs.copy()
         self.halted = False
         self.error = False
         self.position = 0
