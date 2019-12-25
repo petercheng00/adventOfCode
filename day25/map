@@ -1,0 +1,87 @@
+hull breach
+north to holodeck
+south to observatory
+
+observatory - S
+infinite loop - bad
+north to hull breach
+east to navigation
+
+navigation - SE
+whirled peas
+west to observatory
+
+holodeck - N
+giant electromagnet - bad
+east to warp drive maintenance
+south to hull breach
+west to science lab
+
+warp drive maintenance - NE
+ornament
+north to kitchen
+west to holodeck
+
+kitchen - NEN
+escape pod - bad
+north to sick bay
+east to hallway
+south to warp drive maintenance
+
+sick bay - NENN
+dark matter
+south to kitchen
+
+hallway - NENE
+west to kitchen
+
+science lab - NW
+north to crew quarters
+east to holodeck
+west to gift wrapping center
+
+gift wrapping center - NWW
+candy cane
+east to science lab
+west to passages
+
+passages - NWWW
+photons - bad
+east to gift wrapping center
+south to hot chocolate fountain
+west to storage
+
+storage - NWWWW
+tambourine
+east to passages
+
+hot chocolate fountain - NWWWS
+north to passages
+
+crew quarters - NWN
+astrolabe
+east to engineering
+south to science lab
+west to stables
+
+stables - NWNW
+east to crew quarters
+
+engineering - NWNE
+hologram
+east to corridor
+south to arcade
+west to crew quarters
+
+corridor - NWNEE
+klein bottle
+west to engineering
+
+arcade - NWNES
+molten lava - bad
+north to engineering
+west to security checkpoint
+
+security checkpoint - NWNESW
+north to ?
+east to arcade
