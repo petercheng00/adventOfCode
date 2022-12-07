@@ -1,4 +1,6 @@
-with open("input", "r") as f:
+import sys
+
+with open(sys.argv[1]) as f:
     lines = f.read().splitlines()
 
 
@@ -6,7 +8,7 @@ def get_score(opp_move, my_move):
     move_score = 1 + my_move
     if my_move == opp_move:
         result_score = 3
-    elif my_move == (opp_move+1) % 3:
+    elif my_move == (opp_move + 1) % 3:
         result_score = 6
     else:
         result_score = 0
@@ -23,6 +25,7 @@ def part1():
         score += get_score(opp_move, my_move)
 
     print(score)
+
 
 def part2():
     score = 0
@@ -42,6 +45,7 @@ def part2():
         score += get_score(opp_move, my_move)
 
     print(score)
+
 
 part1()
 part2()

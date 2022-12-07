@@ -1,5 +1,8 @@
-with open("input") as f:
+import sys
+
+with open(sys.argv[1]) as f:
     lines = f.read().splitlines()
+
 
 def part1():
     sum = 0
@@ -10,7 +13,7 @@ def part1():
         else:
             max_sum = max(max_sum, sum)
             sum = 0
-    
+
     print(max_sum)
 
 
@@ -33,8 +36,9 @@ def part2():
             elif sum > max3_sum:
                 max3_sum = sum
             sum = 0
-    
+
     print(max1_sum + max2_sum + max3_sum)
+
 
 part1()
 part2()
