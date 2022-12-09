@@ -13,6 +13,7 @@ def part1():
         else:
             max_sum = max(max_sum, sum)
             sum = 0
+    max_sum = max(max_sum, sum)
 
     print(max_sum)
 
@@ -36,6 +37,15 @@ def part2():
             elif sum > max3_sum:
                 max3_sum = sum
             sum = 0
+    if sum >= max1_sum:
+        max3_sum = max2_sum
+        max2_sum = max1_sum
+        max1_sum = sum
+    elif sum >= max2_sum:
+        max3_sum = max2_sum
+        max2_sum = sum
+    elif sum > max3_sum:
+        max3_sum = sum
 
     print(max1_sum + max2_sum + max3_sum)
 
