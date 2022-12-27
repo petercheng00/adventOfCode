@@ -1,4 +1,5 @@
 import sys
+from typing import Tuple
 
 import numpy as np
 from tqdm import tqdm
@@ -14,8 +15,7 @@ shapes = [
     np.array([[1, 1], [1, 1]]),
 ]
 
-WORLD_HEIGHT = 5000
-SHIFT_THRESHOLD = 10
+WORLD_HEIGHT = 1000000
 
 
 class WorldState:
@@ -23,19 +23,9 @@ class WorldState:
         self.jet_pattern = jet_pattern
         self.jet_index = 0
         self.shape_index = 0
-        # World will always be a fixed height, and then when we're close to filling it up, we'll just shift everything.
         self.world = np.zeros((WORLD_HEIGHT, 7), dtype=int)
-        # Amount of spaces below the current world (stuff we've shifted out of frame).
-        self.height_below = 0
         self.rocks_fallen = 0
-
-    def first_nonzero_row(self) -> int:
-        if not np.any(self.world):
-            return self.world.shape[0]
-        return np.nonzero(self.world)[0][0]
-
-    def total_height(self):
-        return self.height_below + self.world.shape[0] - self.first_nonzero_row()
+        self.tower_height = 0
 
     def test_rock_position(self, rock_shape: np.ndarray, x: int, y: int):
         rock_h, rock_w = rock_shape.shape
@@ -44,10 +34,6 @@ class WorldState:
         if x < 0 or x + rock_w - 1 >= world_w:
             return False
         if y + rock_h - 1 >= world_h:
-            if self.height_below > 0:
-                raise Exception(
-                    "Fell through floor when there is height below! Increase world height."
-                )
             return False
 
         # We are inbounds, check for overlap against existing rocks
@@ -57,6 +43,7 @@ class WorldState:
     def add_rock(self, rock_shape: np.ndarray, x: int, y: int):
         rock_h, rock_w = rock_shape.shape
         self.world[y : y + rock_h, x : x + rock_w] += rock_shape
+        self.tower_height = max(self.world.shape[0] - y, self.tower_height)
 
     def drop_next_rock(self):
         shape = shapes[self.shape_index]
@@ -64,7 +51,7 @@ class WorldState:
         rock_height, rock_width = shape.shape
         # Find rock start position
         rock_x = 2
-        rock_y = self.first_nonzero_row() - 4 - (rock_height - 1)
+        rock_y = (self.world.shape[0] - self.tower_height) - 4 - (rock_height - 1)
         while True:
             # Try to shift the rock sideways
             jet_direction = self.jet_pattern[self.jet_index]
@@ -82,15 +69,17 @@ class WorldState:
                 self.add_rock(shape, rock_x, rock_y)
                 break
 
-    def shift_world_if_needed(self):
-        if self.first_nonzero_row() < SHIFT_THRESHOLD:
-            new_world = np.zeros((WORLD_HEIGHT, 7), dtype=int)
-            new_world[WORLD_HEIGHT // 2 :] = self.world[: WORLD_HEIGHT // 2]
-            self.world = new_world
-            self.height_below += WORLD_HEIGHT // 2
-
     def print_world(self):
         print(self.world[-10:])
+
+    def get_state(self, num_rows: int) -> Tuple:
+        data = [self.jet_index, self.shape_index]
+        for row in range(
+            self.world.shape[0] - self.tower_height,
+            self.world.shape[0] - self.tower_height + num_rows,
+        ):
+            data += self.world[row].tolist()
+        return tuple(data)
 
 
 def part1():
@@ -98,13 +87,40 @@ def part1():
     world = WorldState(jet_pattern)
     for i in range(2022):
         world.drop_next_rock()
-        world.shift_world_if_needed()
 
-    print(world.total_height())
+    print(world.tower_height)
 
 
 def part2():
-    pass
+    state_rows = 10
+    state_to_rocks_and_height = {}
+    jet_pattern = lines[0]
+    world = WorldState(jet_pattern)
+    for i in range(10000):
+        world.drop_next_rock()
+        if world.tower_height < state_rows:
+            continue
+        state = world.get_state(10)
+        if state in state_to_rocks_and_height:
+            first_rocks, first_height = state_to_rocks_and_height[state]
+            second_rocks = i + 1
+            second_height = world.tower_height
+            break
+        state_to_rocks_and_height[state] = [i + 1, world.tower_height]
+
+    cycle_len = second_rocks - first_rocks
+    cycle_height_change = second_height - first_height
+
+    target_num_rocks = 1000000000000
+    remaining_rocks = target_num_rocks - first_rocks
+    remaining_rocks_modulo = remaining_rocks % cycle_len
+    skipped_height = (remaining_rocks // cycle_len) * cycle_height_change
+
+    world2 = WorldState(jet_pattern)
+    for i in range(first_rocks + remaining_rocks_modulo):
+        world2.drop_next_rock()
+
+    print(world2.tower_height + skipped_height)
 
 
 part1()
