@@ -1,4 +1,3 @@
-*
-!*.cpp
-!Makefile
-!.gitignore
+.cache
+build
+compile_commands.json
