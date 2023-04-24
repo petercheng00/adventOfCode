@@ -1,0 +1,4 @@
+# eglot uses the repo root as the project root. rust-analyzer only analyzes files/projects it finds via Cargo.toml in the project root. So this is the hack.
+
+[workspace]
+members = ["2020/aoc2020_rust"]
