@@ -1,21 +1,12 @@
-use std::env;
-use std::fs;
+use aoc2020_rust::read_input;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let input_filename = args.get(1);
-
-    if let Some(filename) = input_filename {
-        let input_str =
-            fs::read_to_string(filename).expect("Should have been able to read the file");
-        day1_1(&input_str);
-        day1_2(&input_str);
-    } else {
-        println!("Provide an input filename.");
-    }
+    let input_str = read_input();
+    part1(&input_str);
+    part2(&input_str);
 }
 
-fn day1_1(input: &String) {
+fn part1(input: &String) {
     let nums: Vec<i32> = input
         .lines()
         .map(|line| line.parse().expect("Input lines should all be integers."))
@@ -31,7 +22,7 @@ fn day1_1(input: &String) {
     println!("Failed to find a solution.");
 }
 
-fn day1_2(input: &String) {
+fn part2(input: &String) {
     let nums: Vec<i32> = input
         .lines()
         .map(|line| line.parse().expect("Input lines should all be integers."))
