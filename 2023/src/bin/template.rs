@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use aoc2023_rust::read_input;
 
 fn main() {
