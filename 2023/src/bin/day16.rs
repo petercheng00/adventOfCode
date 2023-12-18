@@ -1,9 +1,8 @@
 use std::collections::HashSet;
 
-use nalgebra::{Matrix2, Vector2};
 use ndarray::Array2;
 
-use aoc2023_rust::read_input;
+use aoc2023_rust::*;
 
 fn main() {
     let input_str = read_input();
@@ -57,14 +56,6 @@ fn part2(input: &str) {
     }
     println!("Part 2: {}", max_energized);
 }
-
-type Vec2 = Vector2<i32>;
-type Mat2 = Matrix2<i32>;
-
-const LEFT: Vec2 = Vec2::new(-1, 0);
-const RIGHT: Vec2 = Vec2::new(1, 0);
-const UP: Vec2 = Vec2::new(0, -1);
-const DOWN: Vec2 = Vec2::new(0, 1);
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 struct Beam {

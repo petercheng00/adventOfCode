@@ -1,4 +1,4 @@
-use aoc2023_rust::read_input;
+use aoc2023_rust::*;
 
 fn main() {
     let input_str = read_input();
