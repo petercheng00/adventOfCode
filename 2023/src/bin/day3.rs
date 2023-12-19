@@ -124,7 +124,7 @@ fn part2(input: &str) {
     }
 
     let mut sum_gear_ratios = 0;
-    for (gear, nums) in gear_xy_to_nums {
+    for (_gear, nums) in gear_xy_to_nums {
         if nums.len() == 2 {
             sum_gear_ratios += nums[0] * nums[1];
         }

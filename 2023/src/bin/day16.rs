@@ -25,7 +25,7 @@ fn part2(input: &str) {
     // Top
     for x in 0..grid.data.shape()[1] {
         let start_beam = Beam {
-            xy: Vec2::new(x as i32, 0),
+            xy: Vec2::new(x as i64, 0),
             dir: DOWN,
         };
         max_energized = max_energized.max(grid.get_energized(start_beam));
@@ -33,7 +33,7 @@ fn part2(input: &str) {
     // Left
     for y in 0..grid.data.shape()[0] {
         let start_beam = Beam {
-            xy: Vec2::new(0, y as i32),
+            xy: Vec2::new(0, y as i64),
             dir: RIGHT,
         };
         max_energized = max_energized.max(grid.get_energized(start_beam));
@@ -41,7 +41,7 @@ fn part2(input: &str) {
     // Right
     for y in 0..grid.data.shape()[0] {
         let start_beam = Beam {
-            xy: Vec2::new(grid.data.shape()[1] as i32 - 1, y as i32),
+            xy: Vec2::new(grid.data.shape()[1] as i64 - 1, y as i64),
             dir: LEFT,
         };
         max_energized = max_energized.max(grid.get_energized(start_beam));
@@ -49,7 +49,7 @@ fn part2(input: &str) {
     // Bottom
     for x in 0..grid.data.shape()[1] {
         let start_beam = Beam {
-            xy: Vec2::new(x as i32, grid.data.shape()[0] as i32 - 1),
+            xy: Vec2::new(x as i64, grid.data.shape()[0] as i64 - 1),
             dir: UP,
         };
         max_energized = max_energized.max(grid.get_energized(start_beam));
@@ -84,8 +84,8 @@ impl Grid {
     fn in_bounds(&self, xy: &Vec2) -> bool {
         xy.x >= 0
             && xy.y >= 0
-            && xy.x < self.data.shape()[1] as i32
-            && xy.y < self.data.shape()[0] as i32
+            && xy.x < self.data.shape()[1] as i64
+            && xy.y < self.data.shape()[0] as i64
     }
 
     fn get_energized(&self, start_beam: Beam) -> usize {

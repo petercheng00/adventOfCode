@@ -1,4 +1,4 @@
-use std::collections::{hash_map::OccupiedEntry, HashMap};
+use std::collections::HashMap;
 
 use aoc2023_rust::read_input;
 

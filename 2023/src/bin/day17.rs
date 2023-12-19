@@ -43,8 +43,8 @@ struct MoveHistory {
 
 impl Ord for State {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        let astar_cost = self.cost_so_far as i32 + (self.dst - self.moves.xy).abs().sum();
-        let astar_cost_other = other.cost_so_far as i32 + (other.dst - other.moves.xy).abs().sum();
+        let astar_cost = self.cost_so_far as i64 + (self.dst - self.moves.xy).abs().sum();
+        let astar_cost_other = other.cost_so_far as i64 + (other.dst - other.moves.xy).abs().sum();
         astar_cost_other.cmp(&astar_cost)
     }
 }
@@ -62,7 +62,7 @@ fn min_heat_loss(grid: Array2<u8>) -> u32 {
             recent_move_dirs: vec![],
         },
         cost_so_far: 0,
-        dst: Vec2::new(grid.shape()[1] as i32 - 1, grid.shape()[0] as i32 - 1),
+        dst: Vec2::new(grid.shape()[1] as i64 - 1, grid.shape()[0] as i64 - 1),
     };
 
     let mut pq = BinaryHeap::new();
@@ -71,7 +71,7 @@ fn min_heat_loss(grid: Array2<u8>) -> u32 {
     let mut state_to_min_cost = HashMap::new();
 
     while let Some(state) = pq.pop() {
-        if state.moves.xy == Vec2::new(grid.shape()[1] as i32 - 1, grid.shape()[0] as i32 - 1) {
+        if state.moves.xy == Vec2::new(grid.shape()[1] as i64 - 1, grid.shape()[0] as i64 - 1) {
             // Done.
             return state.cost_so_far;
         }
@@ -112,8 +112,8 @@ fn evolve_state(grid: &Array2<u8>, state: &State) -> Vec<State> {
         // Can't go out of bounds.
         if new_xy.x < 0
             || new_xy.y < 0
-            || new_xy.x >= grid.shape()[1] as i32
-            || new_xy.y >= grid.shape()[0] as i32
+            || new_xy.x >= grid.shape()[1] as i64
+            || new_xy.y >= grid.shape()[0] as i64
         {
             continue;
         }
@@ -144,7 +144,7 @@ fn min_heat_loss2(grid: Array2<u8>) -> u32 {
             recent_move_dirs: vec![],
         },
         cost_so_far: 0,
-        dst: Vec2::new(grid.shape()[1] as i32 - 1, grid.shape()[0] as i32 - 1),
+        dst: Vec2::new(grid.shape()[1] as i64 - 1, grid.shape()[0] as i64 - 1),
     };
 
     let mut pq = BinaryHeap::new();
@@ -153,7 +153,7 @@ fn min_heat_loss2(grid: Array2<u8>) -> u32 {
     let mut state_to_min_cost = HashMap::new();
 
     while let Some(state) = pq.pop() {
-        if state.moves.xy == Vec2::new(grid.shape()[1] as i32 - 1, grid.shape()[0] as i32 - 1) {
+        if state.moves.xy == Vec2::new(grid.shape()[1] as i64 - 1, grid.shape()[0] as i64 - 1) {
             // Done.
             return state.cost_so_far;
         }
@@ -196,8 +196,8 @@ fn evolve_state2(grid: &Array2<u8>, state: &State) -> Vec<State> {
         // Can't go out of bounds.
         if new_xy.x < 0
             || new_xy.y < 0
-            || new_xy.x >= grid.shape()[1] as i32
-            || new_xy.y >= grid.shape()[0] as i32
+            || new_xy.x >= grid.shape()[1] as i64
+            || new_xy.y >= grid.shape()[0] as i64
         {
             continue;
         }

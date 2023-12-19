@@ -104,14 +104,6 @@ impl std::fmt::Display for Grid {
 }
 
 impl Grid {
-    fn width(&self) -> usize {
-        self.data[0].len()
-    }
-
-    fn height(&self) -> usize {
-        self.data.len()
-    }
-
     fn get(&self, xy: (usize, usize)) -> Option<&Pipe> {
         self.data.get(xy.1)?.get(xy.0)?.as_ref()
     }
@@ -207,7 +199,7 @@ fn part2(input: &str) {
 
     // Scan row by row tracking winding.
     let mut total_inside = 0;
-    for (row, row_pipes) in clean_grid.data.iter().enumerate() {
+    for (_row, row_pipes) in clean_grid.data.iter().enumerate() {
         let mut current_inside = false;
         let mut col = 0;
         while col < row_pipes.len() {
