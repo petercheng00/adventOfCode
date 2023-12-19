@@ -10,8 +10,8 @@ pub fn read_input() -> String {
     fs::read_to_string(filename).expect("Should have been able to read the file")
 }
 
-pub type Vec2 = Vector2<i32>;
-pub type Mat2 = Matrix2<i32>;
+pub type Vec2 = Vector2<i64>;
+pub type Mat2 = Matrix2<i64>;
 
 pub const LEFT: Vec2 = Vec2::new(-1, 0);
 pub const RIGHT: Vec2 = Vec2::new(1, 0);

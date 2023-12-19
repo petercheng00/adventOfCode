@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use ndarray::Array2;
-
 use aoc2023_rust::*;
 
 fn main() {
@@ -11,104 +9,40 @@ fn main() {
 }
 
 fn part1(input: &str) {
-    let mut points = vec![Vec2::new(0, 0)];
-    let mut sum_perimeter = 0;
-    for line in input.lines() {
-        let mut split = line.split_whitespace();
-        let dir = split.next().unwrap();
-        let amount = split.next().unwrap().parse::<i32>().unwrap();
-
-        let dir = match dir {
-            "U" => UP,
-            "D" => DOWN,
-            "L" => LEFT,
-            "R" => RIGHT,
-            _ => panic!("Invalid direction"),
-        };
-
-        points.push(points.last().unwrap() + dir * amount);
-        sum_perimeter += amount;
-    }
-    assert_eq!(points.first(), points.last());
-    points.pop();
-
-    let min_x = points.iter().map(|p| p.x).min().unwrap();
-    let max_x = points.iter().map(|p| p.x).max().unwrap();
-    let min_y = points.iter().map(|p| p.y).min().unwrap();
-    let max_y = points.iter().map(|p| p.y).max().unwrap();
-
-    let mut grid = Array2::<char>::from_elem(
-        ((max_y - min_y + 1) as usize, (max_x - min_x + 1) as usize),
-        '.',
-    );
-    let points = points
-        .iter()
-        .map(|p| Vec2::new(p.x - min_x, p.y - min_y))
-        .collect::<Vec<_>>();
-    let max_x = max_x - min_x;
-    let max_y = max_y - min_y;
-    let min_x = 0;
-    let min_y = 0;
-
-    for i in 0..points.len() {
-        let p1 = points[i];
-        let p2 = points[(i + 1) % points.len()];
-        // Draw in grid from p1 to p2.
-        let mut vec = p2 - p1;
-        vec.x = if vec.x != 0 { vec.x / vec.x.abs() } else { 0 };
-        vec.y = if vec.y != 0 { vec.y / vec.y.abs() } else { 0 };
-        let mut p = p1;
-        while p != p2 {
-            grid[[p.y as usize, p.x as usize]] = '#';
-            p += vec;
-        }
-        grid[[p2.y as usize, p2.x as usize]] = '#';
-    }
-
-    let mut num_inside = 0;
-    for y in min_y..=max_y {
-        for x in min_x..=max_x {
-            // Skip if on the perimeter.
-            if grid[[y as usize, x as usize]] == '#' {
-                continue;
-            }
-            let mut num_intersections = 0;
-            for i in 0..points.len() {
-                let mut p1 = points[i];
-                let mut p2 = points[(i + 1) % points.len()];
-                // If horizontal, nothing to do.
-                if p1.y == p2.y {
-                    continue;
-                }
-                if p1.x <= x {
-                    continue;
-                }
-                // If vertical, make p1 the top point.
-                if p1.y > p2.y {
-                    std::mem::swap(&mut p1, &mut p2);
-                }
-                // p2.y must be below, and p1.y must be above, or equal. Equal breaks the horizontal corner case.
-                if p1.y <= y && p2.y > y {
-                    num_intersections += 1;
-                }
-            }
-            if num_intersections % 2 == 1 {
-                num_inside += 1;
-                grid[[y as usize, x as usize]] = 'O';
-            }
-        }
-    }
-
-    println!("{}", num_inside + sum_perimeter);
+    do_everything(input);
 }
 
 fn part2(input: &str) {
-    let mut y_to_segments = HashMap::<i32, Vec<(i32, i32)>>::new();
+    let mut new_input = String::new();
+    for line in input.lines() {
+        let hex_str = line.split_ascii_whitespace().last().unwrap();
+        let hex_str = hex_str
+            .strip_prefix("(#")
+            .unwrap()
+            .strip_suffix(")")
+            .unwrap();
+        let last_char = hex_str.chars().last().unwrap();
+        let dir_char = match last_char {
+            '0' => 'R',
+            '1' => 'D',
+            '2' => 'L',
+            '3' => 'U',
+            _ => panic!("Invalid direction"),
+        };
+        let hex_str = &hex_str[..hex_str.len() - 1];
+        let hex_num = i32::from_str_radix(hex_str, 16).unwrap();
+        new_input.push_str(&format!("{} {}\n", dir_char, hex_num));
+    }
+    do_everything(new_input.as_str());
+}
+
+fn do_everything(input: &str) {
+    let mut y_to_segments = HashMap::<i64, Vec<(i64, i64)>>::new();
     let mut current_xy = Vec2::new(0, 0);
     for line in input.lines() {
         let mut split = line.split_whitespace();
         let dir = split.next().unwrap();
-        let amount = split.next().unwrap().parse::<i32>().unwrap();
+        let amount = split.next().unwrap().parse::<i64>().unwrap();
 
         let dir = match dir {
             "U" => UP,
@@ -144,7 +78,7 @@ fn part2(input: &str) {
         let prev_area = active_segments
             .iter()
             .map(|(x1, x2)| (x2 - x1 + 1) * prev_y_height)
-            .sum::<i32>();
+            .sum::<i64>();
 
         let next_segments = y_to_segments.get(&y).unwrap();
 
@@ -159,9 +93,9 @@ fn part2(input: &str) {
 }
 
 fn merge_segments(
-    active_segments: &[(i32, i32)],
-    next_segments: &[(i32, i32)],
-) -> (Vec<(i32, i32)>, i32) {
+    active_segments: &[(i64, i64)],
+    next_segments: &[(i64, i64)],
+) -> (Vec<(i64, i64)>, i64) {
     let mut segments = active_segments.clone().to_vec();
 
     // Each next segment can
@@ -178,7 +112,7 @@ fn merge_segments(
     let mut intersection_len = active_segments
         .iter()
         .map(|(x1, x2)| (x2 - x1 + 1))
-        .sum::<i32>();
+        .sum::<i64>();
     for next in next_segments {
         let mut interacted = false;
         for s in &mut segments {
