@@ -1,7 +1,7 @@
 use std::env;
 use std::fs;
 
-use nalgebra::{Matrix2, Vector2};
+use nalgebra::{Matrix2, Vector2, Vector3};
 
 pub fn read_input() -> String {
     let args: Vec<String> = env::args().collect();
@@ -17,3 +17,5 @@ pub const LEFT: Vec2 = Vec2::new(-1, 0);
 pub const RIGHT: Vec2 = Vec2::new(1, 0);
 pub const UP: Vec2 = Vec2::new(0, -1);
 pub const DOWN: Vec2 = Vec2::new(0, 1);
+
+pub type Vec3 = Vector3<i64>;
