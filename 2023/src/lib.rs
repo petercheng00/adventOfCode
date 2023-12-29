@@ -18,4 +18,6 @@ pub const RIGHT: Vec2 = Vec2::new(1, 0);
 pub const UP: Vec2 = Vec2::new(0, -1);
 pub const DOWN: Vec2 = Vec2::new(0, 1);
 
+pub const DIRS: [Vec2; 4] = [LEFT, RIGHT, UP, DOWN];
+
 pub type Vec3 = Vector3<i64>;
